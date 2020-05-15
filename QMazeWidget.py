@@ -29,20 +29,28 @@ class QMazeVisualizer(QWidget):
         qp.setBrush(Qt.white)
 
         parent_size = self.size()
-        height_padding = (self.maze.height * 1) # оступ между клетками по ширине
-        width_padding = (self.maze.width * 1) # отступ между клетками по высотке
-        bar_width = (parent_size.width() - width_padding) // self.maze.width # масштабированная ширина клетки
-        bar_height = (parent_size.height() - height_padding) // self.maze.height # масштабированная высота клетки
+        parent_w, parent_h = parent_size.width(), parent_size.height()
 
+        # height_padding = (self.maze.height * 1) # оступ между клетками по ширине
+        # width_padding = (self.maze.width * 1) # отступ между клетками по высотке
+
+        bar_size = parent_w if parent_w < parent_h else parent_h
+        min_bars_in_line = self.maze.width if self.maze.width > self.maze.height else self.maze.height
+
+        bar_size = bar_size // min_bars_in_line
+
+        x_center_scale = (parent_h - self.maze.width * bar_size) // 2
+        y_center_scale = (parent_w - self.maze.height * bar_size) // 2
+        print(x_center_scale, y_center_scale)
         for col in range(self.maze.height):
             for row in range(self.maze.width):
                 ceil = self.maze.matrix[col][row]
                 qp.setBrush(ceil.color)
                 qp.drawRect(
-                    row * bar_width,
-                    col * bar_height,
-                    bar_width,
-                    bar_height
+                    row * bar_size + x_center_scale,
+                    col * bar_size + y_center_scale,
+                    bar_size,
+                    bar_size
                 )
 
         return

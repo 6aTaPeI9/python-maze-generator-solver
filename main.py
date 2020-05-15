@@ -12,7 +12,7 @@ from PyQt5.QtGui import QPainter, QFont, QColor, QPen, QPalette
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.setMinimumSize(1000, 900)
+        self.setMinimumSize(300, 300)
         self.setWindowTitle('Maze alghoritms')
         self.InitWindow()
         self.show()
@@ -28,7 +28,7 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.redraw_event)
 
         main_layout = QHBoxLayout()
-        maze = maze_matrix.Maze(300, 300)
+        maze = maze_matrix.Maze(20, 30)
         q_maze = QMazeVisualizer(maze)
         main_layout.addWidget(q_maze)
         widget = QWidget()
