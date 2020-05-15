@@ -19,7 +19,7 @@ class Maze:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.matrix = gen_maze_matrix(self.width, self.height)
+        self.matrix = gen_maze_matrix(self.height, self.width)
 
     def generate_maze(self) -> typing.Generator:
         """
