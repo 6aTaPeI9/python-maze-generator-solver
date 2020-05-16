@@ -1,8 +1,8 @@
 import sys
 import math
 import time
-from QMazeWidget import QMazeVisualizer
 
+from QMazeWidget import QMazeVisualizer
 from maze_generators import maze_matrix
 from PyQt5.QtWidgets import (QWidget, QMainWindow, QVBoxLayout, QHBoxLayout,
     QStackedLayout, QGridLayout, QPushButton, QSlider, QLabel, QCheckBox, QApplication)
@@ -12,9 +12,12 @@ from PyQt5.QtGui import QPainter, QFont, QColor, QPen, QPalette
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.mazes = []
+
         self.setMinimumSize(300, 300)
         self.setWindowTitle('Maze alghoritms')
         self.InitWindow()
+        self.timer.start()
         self.show()
 
 
@@ -24,13 +27,27 @@ class MainWindow(QMainWindow):
         """
         self.timer = QTimer(self)
         self.timer.setSingleShot(False)
-        self.timer.setInterval(0.1)
+        self.timer.setInterval(100)
         self.timer.timeout.connect(self.redraw_event)
 
+        q_maze_grid = QGridLayout()
+        q_maze_grid.setSpacing(0)
+        q_maze_grid.addWidget(QWidget())
+
+        row, col = 0, 0
+        for i in range(1):
+            maze = QMazeVisualizer(maze_matrix.Maze(50, 50))
+            self.mazes.append(maze)
+
+            if col >= 2:
+                row += 1
+                col = 0
+
+            q_maze_grid.addWidget(maze, row, col)
+            col += 1
+
         main_layout = QHBoxLayout()
-        maze = maze_matrix.Maze(20, 30)
-        q_maze = QMazeVisualizer(maze)
-        main_layout.addWidget(q_maze)
+        main_layout.addLayout(q_maze_grid)
         widget = QWidget()
         palette = widget.palette()
         widget.setAutoFillBackground(True)
@@ -40,7 +57,9 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def redraw_event(self):
-        pass
+        for q_maze in self.mazes:
+            q_maze.next.__next__()
+            q_maze.update()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
